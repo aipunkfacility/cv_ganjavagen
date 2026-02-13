@@ -36,9 +36,6 @@ const t = useTranslations(lang);
 				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
 					return localStorage.getItem('theme');
 				}
-				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-					return 'dark';
-				}
 				return 'light';
 			})();
 
@@ -80,14 +77,8 @@ const t = useTranslations(lang);
 			</footer>
 		</div>
 
-		<button class="back-to-top" id="backToTop" aria-label="Наверх">
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M18 15l-6-6-6 6"/>
-			</svg>
-		</button>
 
 		<script>
-			const button = document.getElementById('backToTop');
 			const container = document.querySelector('.snap-container');
 			const sections = Array.from(document.querySelectorAll('section, footer'));
 
@@ -128,14 +119,6 @@ const t = useTranslations(lang);
 
 			// Показ/скрытие кнопки и обновление индекса
 			function handleScroll() {
-				// Управляем видимостью кнопки
-				if (container.scrollTop > 300) {
-					button.style.opacity = '1';
-					button.style.pointerEvents = 'auto';
-				} else {
-					button.style.opacity = '0';
-					button.style.pointerEvents = 'none';
-				}
 
 				if (isAnimating) return;
 				
@@ -201,18 +184,7 @@ const t = useTranslations(lang);
 				}
 			}, { passive: true });
 
-			if (button && container) {
-				// Скрываем кнопку изначально
-				button.style.opacity = '0';
-				button.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-
-				button.addEventListener('click', (e) => {
-					e.preventDefault();
-					isAnimating = false; 
-					currentSectionIndex = 0;
-					customSmoothScroll(container, 0, 1000);
-				});
-
+			if (container) {
 				// Лого-ссылка
 				const logoLink = document.querySelector('.logo-link');
 				if (logoLink) {
