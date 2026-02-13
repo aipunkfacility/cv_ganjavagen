@@ -14,6 +14,19 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
+<script is:inline>
+  // Редирект на основе языка браузера для статического режима
+  const savedLang = localStorage.getItem('preferred-lang');
+  if (!savedLang && window.location.pathname === '/') {
+    const browserLang = navigator.language.split('-')[0];
+    if (browserLang === 'vi' || browserLang === 'vn') {
+      window.location.href = '/vn/';
+    } else if (browserLang !== 'ru') {
+      window.location.href = '/en/';
+    }
+  }
+</script>
+
 <Layout title={t('hero.title') + " — Alexander Finaev"}>
 	<Hero />
 	<About />

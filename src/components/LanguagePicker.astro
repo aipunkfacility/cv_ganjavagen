@@ -1,17 +1,13 @@
 ---
 import { languages } from '../i18n/ui';
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 ---
-<div class="language-picker">
+<div class="language-picker" aria-label={t('nav.select_lang') || "Select Language"}>
   {Object.entries(languages).map(([lang, label]) => (
-    <a 
-      href={lang === 'ru' ? '/' : `/${lang}/`} 
-      class={currentLang === lang ? 'active' : ''}
-    >
-      {lang.toUpperCase()}
-    </a>
+    <a href={lang === 'ru' ? '/' : `/${lang}/`} class={currentLang === lang ? 'active' : ''}>{lang.toUpperCase()}</a>
   ))}
 </div>
 

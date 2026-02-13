@@ -1,7 +1,5 @@
 ---
-import { Image } from 'astro:assets';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import heroImage from '../assets/hero.webp';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -19,12 +17,7 @@ const t = useTranslations(lang);
 			</p>
 		</div>
 		<div class="hero-image-wrapper">
-			<Image 
-				src={heroImage} 
-				alt="Alexander Finaev" 
-				class="hero-portrait"
-				loading="eager"
-			/>
+			<img src="/hero.webp" alt="Alexander Finaev" class="hero-portrait" width="1500" height="2000" decoding="async" loading="eager" />
 			<div class="hero-decoration"></div>
 		</div>
 	</div>

@@ -4,54 +4,83 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
-<section class="concept">
-	<div class="container concept-grid">
-		<div class="concept-section">
-			<h3>{t('footer.edu_title')}</h3>
-			<p>{t('footer.edu_desc')}</p>
-		</div>
-		<div class="concept-section">
-			<h3>{t('footer.philo_title')}</h3>
-			<p>{t('footer.philo_desc')}</p>
+<section id="concept" class="concept-section">
+	<div class="container">
+		<h2 class="section-title">{t('nav.concept')}</h2>
+		<div class="concept-grid">
+			<div class="concept-card">
+				<h3>{t('footer.edu_title')}</h3>
+				<p>{t('footer.edu_desc')}</p>
+			</div>
+			<div class="concept-card">
+				<h3>{t('footer.philo_title')}</h3>
+				<p>{t('footer.philo_desc')}</p>
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.concept {
-		background-color: var(--color-bg);
-		padding: var(--spacing-medium) 0;
+	.concept-section {
+		background-color: var(--color-bg-alt);
+	}
+
+	.section-title {
+		margin-bottom: var(--spacing-medium);
+		text-align: center;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 1.5rem;
+		color: var(--color-accent);
 	}
 
 	.concept-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 		gap: 4rem;
 	}
 
-	.concept-section h3 {
-		font-size: 1.1rem;
+	.concept-card {
+		border-left: 2px solid var(--color-detail);
+		padding-left: 2.5rem;
+		padding-bottom: 1.5rem;
+	}
+
+	.concept-card h3 {
+		font-size: 1.3rem; /* Slightly larger like Competencies */
 		margin-bottom: 1rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: var(--color-accent);
+		color: var(--color-text);
+		font-family: var(--font-serif);
 	}
 
-	.concept-section p {
+	.concept-card p {
 		font-size: 1rem;
 		opacity: 0.8;
-		line-height: 1.7;
-		padding-right: 2rem;
+		line-height: 1.8;
+	}
+
+	@media (max-width: 1024px) {
+		.concept-grid {
+			grid-template-columns: 1fr;
+			gap: 3rem;
+		}
 	}
 
 	@media (max-width: 768px) {
-		.concept-grid {
-			grid-template-columns: 1fr;
-			gap: 2rem;
+		.section-title {
+			font-size: 1.3rem;
+			margin-bottom: 3rem;
 		}
-		
-		.concept-section p {
-			padding-right: 0;
+
+		.concept-card {
+			padding-left: 1.5rem;
+			padding-bottom: 1rem;
+		}
+
+		.concept-card h3 {
+			font-size: 1.2rem;
 		}
 	}
 </style>

@@ -2,6 +2,7 @@
 import '../styles/index.css';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import LanguagePicker from '../components/LanguagePicker.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 
 interface Props {
 	title: string;
@@ -29,6 +30,24 @@ const t = useTranslations(lang);
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 		<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+		<script is:inline>
+			const theme = (() => {
+				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+					return localStorage.getItem('theme');
+				}
+				if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+					return 'dark';
+				}
+				return 'light';
+			})();
+
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		</script>
 	</head>
 	<body>
 		<div class="snap-container">
@@ -36,12 +55,13 @@ const t = useTranslations(lang);
 			
 			<header class="main-header">
 				<div class="container header-inner">
-					<a href="#top" class="logo-link">
+					<a href="#top" class="logo-link" aria-label={lang === 'ru' ? 'На главную' : 'Home'}>
 						<div class="logo">
 							{lang === 'ru' ? 'Александр Финаев' : 'Alexander Finaev'}
 						</div>
 					</a>
 					<div class="header-controls">
+						<ThemeSwitcher />
 						<LanguagePicker />
 					</div>
 				</div>
@@ -139,6 +159,11 @@ const t = useTranslations(lang);
 			container.addEventListener('wheel', (e) => {
 				if (isAnimating) {
 					e.preventDefault();
+					return;
+				}
+
+				// Если скролл-снап отключен (например, для скриншота), не перехватываем
+				if (getComputedStyle(container).scrollSnapType === 'none') {
 					return;
 				}
 

@@ -12,6 +12,8 @@
   /* Deep Teal */
   --color-detail: #96694C;
   /* Clay */
+  --color-surface: #FFFFFF;
+  --color-border: rgba(26, 26, 26, 0.1);
 
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Inter', sans-serif;
@@ -23,6 +25,24 @@
   --container-padding: 2rem;
   --section-height: 100vh;
   --section-height-dynamic: 100dvh;
+}
+
+:root.dark {
+  --color-bg: #121212;
+  --color-bg-alt: #1E1E1E;
+  --color-text: #E0E0E0;
+  --color-accent: #38A89D;
+  /* More muted teal for dark mode */
+  --color-detail: #D4A373;
+  --color-surface: #1E1E1E;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-cta-bg: #1E1E1E;
+  /* Muted background for CTA in dark mode */
+}
+
+:root {
+  --color-cta-bg: var(--color-accent);
+  /* Default (light theme) accent for CTA */
 }
 
 @media (max-width: 768px) {
@@ -47,6 +67,21 @@ body {
   height: 100%;
 }
 
+@media print {
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+:root.no-snap,
+:root.no-snap body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -54,6 +89,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .snap-container {
@@ -61,6 +97,39 @@ body {
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for Full Page Screenshot extensions */
+:root.no-snap .snap-container {
+  height: auto !important;
+  overflow-y: visible !important;
+  scroll-snap-type: none !important;
+  display: block !important;
+}
+
+:root.no-snap section {
+  min-height: 0 !important;
+  height: auto !important;
+  scroll-snap-align: none !important;
+  padding: var(--spacing-large) 0 !important;
+  display: block !important;
+}
+
+@media print {
+  .snap-container {
+    height: auto !important;
+    overflow-y: visible !important;
+    scroll-snap-type: none !important;
+    display: block !important;
+  }
+
+  section {
+    min-height: 0 !important;
+    height: auto !important;
+    scroll-snap-align: none !important;
+    padding: var(--spacing-large) 0 !important;
+    display: block !important;
+  }
 }
 
 h1,
@@ -123,7 +192,7 @@ section {
   height: 3.5rem;
   background-color: var(--color-bg);
   color: var(--color-text);
-  border: 1px solid rgba(26, 26, 26, 0.1);
+  border: 1px solid var(--color-border);
   border-radius: 50%;
   padding: 0;
   display: flex;
@@ -156,9 +225,9 @@ section {
   right: 0;
   z-index: 1000;
   padding: 1rem 0;
-  background-color: #ffffff;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.05);
-  transition: transform 0.3s ease;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .header-inner {
@@ -184,11 +253,10 @@ section {
 
 /* Footer */
 .main-footer {
-  border-top: 1px solid rgba(26, 26, 26, 0.05);
+  border-top: 1px solid var(--color-border);
   padding: var(--spacing-medium) 0;
-  margin-top: var(--spacing-medium);
   scroll-snap-align: end;
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .footer-grid {
