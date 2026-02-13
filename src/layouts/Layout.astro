@@ -79,13 +79,13 @@ const t = useTranslations(lang);
 
 
 		<script>
-			const container = document.querySelector('.snap-container');
-			const sections = Array.from(document.querySelectorAll('section, footer'));
+			const container = document.querySelector('.snap-container') as HTMLElement;
+			const sections = Array.from(document.querySelectorAll('section, footer')) as HTMLElement[];
 
 			let isAnimating = false;
 			let currentSectionIndex = 0;
 
-			function customSmoothScroll(element, target, duration, onComplete) {
+			function customSmoothScroll(element: HTMLElement, target: number, duration: number, onComplete?: () => void) {
 				if (isAnimating) return;
 				isAnimating = true;
 				element.style.scrollSnapType = 'none';
@@ -94,7 +94,7 @@ const t = useTranslations(lang);
 				const change = target - start;
 				const startTime = performance.now();
 
-				function animateScroll(currentTime) {
+				function animateScroll(currentTime: number) {
 					const elapsed = currentTime - startTime;
 					const progress = Math.min(elapsed / duration, 1);
 					

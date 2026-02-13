@@ -6,7 +6,7 @@ const currentLang = getLangFromUrl(Astro.url);
 const t = useTranslations(currentLang);
 ---
 <div class="language-picker" aria-label={t('nav.select_lang') || "Select Language"}>
-  {Object.entries(languages).map(([lang, label]) => (
+  {Object.entries(languages).map(([lang]) => (
     <a href={lang === 'ru' ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${lang}/`} class={currentLang === lang ? 'active' : ''}>{lang.toUpperCase()}</a>
   ))}
 </div>
