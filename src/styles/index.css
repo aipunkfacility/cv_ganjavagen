@@ -1,0 +1,244 @@
+/* 
+  Концепция: Light & Direct
+  Фон: #F9F9F9 (Off-white / Песочный белый)
+  Текст: #1A1A1A (Глубокий графитовый)
+*/
+
+:root {
+  --color-bg: #F9F9F9;
+  --color-bg-alt: #F0F0EE;
+  --color-text: #1A1A1A;
+  --color-accent: #0D3B3A;
+  /* Deep Teal */
+  --color-detail: #96694C;
+  /* Clay */
+
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+
+  --spacing-large: 8rem;
+  --spacing-medium: 4rem;
+  --spacing-small: 2rem;
+
+  --container-padding: 2rem;
+  --section-height: 100vh;
+  --section-height-dynamic: 100dvh;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-large: 2.5rem;
+    /* Reduced from 4rem */
+    --spacing-medium: 1.5rem;
+    /* Reduced from 2rem */
+    --spacing-small: 0.8rem;
+    --container-padding: 1rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.snap-container {
+  height: var(--section-height-dynamic);
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+section {
+  min-height: var(--section-height-dynamic);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-medium) 0;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+/* Принцип "Негативного пространства" */
+.whitespace-extreme {
+  margin: var(--spacing-large) 0;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  padding: 1.2rem 2.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.9rem;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.cta-button:hover {
+  background-color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(13, 59, 58, 0.15);
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  outline: none;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.back-to-top:hover {
+  opacity: 1;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-5px);
+}
+
+.back-to-top svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* Header */
+.main-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Footer */
+.main-footer {
+  border-top: 1px solid rgba(26, 26, 26, 0.05);
+  padding: var(--spacing-medium) 0;
+  margin-top: var(--spacing-medium);
+  scroll-snap-align: end;
+  background: #fff;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.footer-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer-section p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  line-height: 1.7;
+}
+
+.footer-bottom {
+  margin-top: var(--spacing-medium);
+  text-align: center;
+  font-size: 0.75rem;
+  opacity: 0.4;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  section {
+    justify-content: flex-start;
+    padding-top: 4rem;
+    /* Reduced from 6rem */
+  }
+
+  .main-header {
+    padding: 0.8rem 0;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-section h3 {
+    font-size: 1rem;
+  }
+}

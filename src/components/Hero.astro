@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import heroImage from '../assets/hero.webp';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section class="hero">
+	<div class="container hero-grid">
+		<div class="hero-content">
+			<h1>
+				{t('hero.title').split(' ').slice(0, 1)}<br/>
+				<span class="accent-text">{t('hero.title').split(' ').slice(1, 2)}</span><br/>
+				{t('hero.title').split(' ').slice(2).join(' ')}
+			</h1>
+			<p class="hero-description">
+				{t('hero.desc')}
+			</p>
+		</div>
+		<div class="hero-image-wrapper">
+			<Image 
+				src={heroImage} 
+				alt="Alexander Finaev" 
+				class="hero-portrait"
+				loading="eager"
+			/>
+			<div class="hero-decoration"></div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero-grid {
+		display: grid;
+		grid-template-columns: 1.2fr 1fr;
+		gap: 4rem;
+		align-items: center;
+	}
+
+	.hero-content h1 {
+		font-size: 4.5rem;
+		text-transform: uppercase;
+		margin-bottom: 2rem;
+		letter-spacing: -0.02em;
+		line-height: 1.05;
+	}
+
+	.accent-text {
+		color: var(--color-accent);
+	}
+
+	.hero-description {
+		font-size: 1.25rem;
+		margin-bottom: 3.5rem;
+		max-width: 500px;
+		opacity: 0.9;
+		border-left: 3px solid var(--color-detail);
+		padding-left: 2rem;
+		line-height: 1.6;
+	}
+
+	.hero-image-wrapper {
+		position: relative;
+		display: flex;
+		justify-content: center;
+	}
+
+	.hero-portrait {
+		width: auto;
+		max-width: 100%;
+		max-height: 75vh;
+		object-fit: contain;
+		display: block;
+		filter: grayscale(15%);
+	}
+
+	.hero-decoration {
+		position: absolute;
+		top: -20px;
+		right: -20px;
+		width: 120px;
+		height: 120px;
+		border-top: 1px solid var(--color-text);
+		border-right: 1px solid var(--color-text);
+		opacity: 0.08;
+	}
+
+	@media (max-width: 1024px) {
+		.hero-content h1 {
+			font-size: 3.5rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.hero-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem; /* Reduced from 3rem */
+			text-align: center;
+			padding-top: 1rem; /* Reduced from 4rem */
+		}
+
+		.hero-content h1 {
+			font-size: 2.2rem; /* Reduced from 2.8rem for better fit */
+			margin-bottom: 1rem;
+		}
+
+		.hero-description {
+			margin: 0 auto 1.5rem;
+			font-size: 1rem;
+			padding: 0 1.5rem;
+			border-left: none;
+			border-top: 1.5px solid var(--color-detail);
+			padding-top: 1rem;
+		}
+
+		.hero-portrait {
+			max-height: 45vh;
+		}
+		
+		.hero-decoration {
+			display: none;
+		}
+	}
+</style>

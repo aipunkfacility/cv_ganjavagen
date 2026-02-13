@@ -1,0 +1,101 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const solutions = [
+	{ title: t('sol.title1'), text: t('sol.desc1') },
+	{ title: t('sol.title2'), text: t('sol.desc2') },
+	{ title: t('sol.title3'), text: t('sol.desc3') },
+	{ title: t('sol.title4'), text: t('sol.desc4') }
+];
+---
+
+<section id="local" class="local-solutions">
+	<div class="container">
+		<h2 class="section-title">{t('sol.header')}</h2>
+		<div class="solutions-grid">
+			{solutions.map(item => (
+				<div class="sol-card">
+					<h3>{item.title}</h3>
+					<p>{item.text}</p>
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.local-solutions {
+		background-color: #fff;
+	}
+
+	.section-title {
+		margin-bottom: var(--spacing-medium);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-accent);
+		text-align: center;
+		font-size: 1.5rem;
+	}
+
+	.solutions-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+		gap: 4rem;
+	}
+
+	.sol-card {
+		border-left: 2px solid var(--color-detail);
+		padding-left: 2.5rem;
+		padding-bottom: 1.5rem;
+		transition: transform 0.3s ease;
+	}
+
+	.sol-card:hover {
+		transform: translateX(10px);
+	}
+
+	.sol-card h3 {
+		font-size: 1.6rem;
+		margin-bottom: 1.2rem;
+		font-family: var(--font-serif);
+		color: var(--color-text);
+		line-height: 1.2;
+	}
+
+	.sol-card p {
+		font-size: 1.05rem;
+		opacity: 0.8;
+		line-height: 1.8;
+	}
+
+	@media (max-width: 1024px) {
+		.solutions-grid {
+			grid-template-columns: 1fr;
+			gap: 3rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.section-title {
+			font-size: 1.3rem;
+			margin-bottom: 3rem;
+		}
+
+		.sol-card {
+			padding-left: 1.5rem;
+			padding-bottom: 1rem;
+		}
+
+		.sol-card h3 {
+			font-size: 1.4rem;
+			margin-bottom: 0.8rem;
+		}
+
+		.sol-card p {
+			font-size: 1rem;
+		}
+	}
+</style>

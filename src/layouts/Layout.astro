@@ -1,0 +1,221 @@
+---
+import '../styles/index.css';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import LanguagePicker from '../components/LanguagePicker.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = "ИИ-автоматизация и креатив студийного уровня в Муйне. Александр Финаев — эксперт с 30-летним стажем." } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="snap-container">
+			<div id="top" style="position: absolute; top: 0;"></div>
+			
+			<header class="main-header">
+				<div class="container header-inner">
+					<a href="#top" class="logo-link">
+						<div class="logo">
+							{lang === 'ru' ? 'Александр Финаев' : 'Alexander Finaev'}
+						</div>
+					</a>
+					<div class="header-controls">
+						<LanguagePicker />
+					</div>
+				</div>
+			</header>
+
+			<main>
+				<slot />
+			</main>
+
+			<footer class="main-footer">
+				<div class="container">
+					<div class="footer-grid">
+						<div class="footer-section">
+							<h3>{t('footer.edu_title')}</h3>
+							<p>{t('footer.edu_desc')}</p>
+						</div>
+						<div class="footer-section">
+							<h3>{t('footer.philo_title')}</h3>
+							<p>{t('footer.philo_desc')}</p>
+						</div>
+					</div>
+					<div class="footer-bottom">
+						{t('footer.copy')}
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<button class="back-to-top" id="backToTop" aria-label="Наверх">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M18 15l-6-6-6 6"/>
+			</svg>
+		</button>
+
+		<script>
+			const button = document.getElementById('backToTop');
+			const container = document.querySelector('.snap-container');
+			const sections = Array.from(document.querySelectorAll('section, footer'));
+
+			let isAnimating = false;
+			let currentSectionIndex = 0;
+
+			function customSmoothScroll(element, target, duration, onComplete) {
+				if (isAnimating) return;
+				isAnimating = true;
+				element.style.scrollSnapType = 'none';
+
+				const start = element.scrollTop;
+				const change = target - start;
+				const startTime = performance.now();
+
+				function animateScroll(currentTime) {
+					const elapsed = currentTime - startTime;
+					const progress = Math.min(elapsed / duration, 1);
+					
+					// Easing: easeInOutQuad
+					const ease = progress < 0.5 
+						? 2 * progress * progress 
+						: 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+					element.scrollTop = start + change * ease;
+
+					if (progress < 1) {
+						requestAnimationFrame(animateScroll);
+					} else {
+						isAnimating = false;
+						element.style.scrollSnapType = 'y mandatory';
+						if (onComplete) onComplete();
+					}
+				}
+
+				requestAnimationFrame(animateScroll);
+			}
+
+			// Показ/скрытие кнопки и обновление индекса
+			function handleScroll() {
+				// Управляем видимостью кнопки
+				if (container.scrollTop > 300) {
+					button.style.opacity = '1';
+					button.style.pointerEvents = 'auto';
+				} else {
+					button.style.opacity = '0';
+					button.style.pointerEvents = 'none';
+				}
+
+				if (isAnimating) return;
+				
+				const scrollTop = container.scrollTop;
+				let closestIndex = 0;
+				let minDiff = Math.abs(scrollTop - sections[0].offsetTop);
+
+				sections.forEach((section, index) => {
+					const diff = Math.abs(scrollTop - section.offsetTop);
+					if (diff < minDiff) {
+						minDiff = diff;
+						closestIndex = index;
+					}
+				});
+				currentSectionIndex = closestIndex;
+			}
+
+			container.addEventListener('scroll', handleScroll);
+
+			// Перехват колеса мыши
+			container.addEventListener('wheel', (e) => {
+				if (isAnimating) {
+					e.preventDefault();
+					return;
+				}
+
+				if (Math.abs(e.deltaY) < 30) return; // Игнорируем мелкие движения
+
+				e.preventDefault();
+				const direction = e.deltaY > 0 ? 1 : -1;
+				const nextIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
+
+				if (nextIndex !== currentSectionIndex) {
+					currentSectionIndex = nextIndex;
+					customSmoothScroll(container, sections[currentSectionIndex].offsetTop, 1000);
+				}
+			}, { passive: false });
+
+			// Поддержка Touch (для мобильных)
+			let touchStartY = 0;
+			container.addEventListener('touchstart', (e) => {
+				touchStartY = e.touches[0].clientY;
+			}, { passive: true });
+
+			container.addEventListener('touchend', (e) => {
+				if (isAnimating) return;
+				const touchEndY = e.changedTouches[0].clientY;
+				const diff = touchStartY - touchEndY;
+
+				if (Math.abs(diff) > 50) { // Порог чувствительности
+					const direction = diff > 0 ? 1 : -1;
+					const nextIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
+					
+					if (nextIndex !== currentSectionIndex) {
+						currentSectionIndex = nextIndex;
+						customSmoothScroll(container, sections[currentSectionIndex].offsetTop, 1000);
+					}
+				}
+			}, { passive: true });
+
+			if (button && container) {
+				// Скрываем кнопку изначально
+				button.style.opacity = '0';
+				button.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+				button.addEventListener('click', (e) => {
+					e.preventDefault();
+					isAnimating = false; 
+					currentSectionIndex = 0;
+					customSmoothScroll(container, 0, 1000);
+				});
+
+				// Лого-ссылка
+				const logoLink = document.querySelector('.logo-link');
+				if (logoLink) {
+					logoLink.addEventListener('click', (e) => {
+						e.preventDefault();
+						isAnimating = false;
+						currentSectionIndex = 0;
+						customSmoothScroll(container, 0, 1000);
+					});
+				}
+			}
+		</script>
+		<style is:global>
+			.logo-link {
+				text-decoration: none;
+				color: inherit;
+				cursor: pointer;
+			}
+		</style>
+	</body>
+</html>

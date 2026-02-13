@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Method from '../../components/Method.astro';
+import Competencies from '../../components/Competencies.astro';
+import LocalSolutions from '../../components/LocalSolutions.astro';
+import CTASection from '../../components/CTASection.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<Layout title={t('hero.title') + " — Alexander Finaev"}>
+	<Hero />
+	<About />
+	<Method />
+	<Competencies />
+	<LocalSolutions />
+	<CTASection />
+</Layout>

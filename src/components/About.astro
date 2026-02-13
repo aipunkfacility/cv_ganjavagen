@@ -1,0 +1,58 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section id="about">
+	<div class="container about-container">
+		<h2>{t('about.title')}</h2>
+		<p class="about-p1">
+			{t('about.p1')}
+		</p>
+		<p class="about-p2">
+			{t('about.p2')}
+		</p>
+	</div>
+</section>
+
+<style>
+	.about-container {
+		max-width: 800px;
+		text-align: left;
+	}
+
+	.about-container h2 {
+		font-size: 2.5rem;
+		margin-bottom: 2rem;
+		color: var(--color-accent);
+	}
+
+	.about-p1 {
+		font-size: 1.15rem;
+		margin-bottom: 1.5rem;
+		line-height: 1.8;
+	}
+
+	.about-p2 {
+		font-size: 1.15rem;
+		font-weight: 600;
+		line-height: 1.8;
+		color: var(--color-detail);
+	}
+
+	@media (max-width: 768px) {
+		.about-container {
+			text-align: center;
+		}
+		
+		.about-container h2 {
+			font-size: 2.2rem;
+			margin-bottom: 1.5rem;
+		}
+
+		.about-p1, .about-p2 {
+			font-size: 1.1rem;
+		}
+	}
+</style>

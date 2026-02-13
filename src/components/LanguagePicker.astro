@@ -1,0 +1,45 @@
+---
+import { languages } from '../i18n/ui';
+import { getLangFromUrl } from '../i18n/utils';
+
+const currentLang = getLangFromUrl(Astro.url);
+---
+<div class="language-picker">
+  {Object.entries(languages).map(([lang, label]) => (
+    <a 
+      href={lang === 'ru' ? '/' : `/${lang}/`} 
+      class={currentLang === lang ? 'active' : ''}
+    >
+      {lang.toUpperCase()}
+    </a>
+  ))}
+</div>
+
+<style>
+	.language-picker {
+		display: flex;
+		gap: 1rem;
+		font-size: 0.75rem;
+		font-weight: 600;
+	}
+	.language-picker a {
+		text-decoration: none;
+		color: var(--color-text);
+		opacity: 0.4;
+		transition: opacity 0.3s ease;
+		padding: 0.2rem 0;
+	}
+	.language-picker a:hover {
+		opacity: 0.8;
+	}
+	.language-picker a.active {
+		opacity: 1;
+		border-bottom: 1.5px solid var(--color-accent);
+	}
+
+	@media (max-width: 768px) {
+		.language-picker {
+			gap: 0.8rem;
+		}
+	}
+</style>
