@@ -14,15 +14,16 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<script is:inline>
+<script is:inline define:vars={{ base: import.meta.env.BASE_URL }}>
   // Редирект на основе языка браузера для статического режима
   const savedLang = localStorage.getItem('preferred-lang');
-  if (!savedLang && window.location.pathname === '/') {
+  const normalizedBase = base.endsWith('/') ? base : base + '/';
+  if (!savedLang && (window.location.pathname === base || window.location.pathname === base.replace(/\/$/, ''))) {
     const browserLang = navigator.language.split('-')[0];
     if (browserLang === 'vi' || browserLang === 'vn') {
-      window.location.href = '/vn/';
+      window.location.href = `${normalizedBase}vn/`;
     } else if (browserLang !== 'ru') {
-      window.location.href = '/en/';
+      window.location.href = `${normalizedBase}en/`;
     }
   }
 </script>
