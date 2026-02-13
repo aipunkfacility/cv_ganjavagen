@@ -138,4 +138,9 @@ npx astro check
 * Telegram: [@afinaev](https://t.me/afinaev)
 * Zalo: [zalo.me/84946943543](https://zalo.me/84946943543)
 
-Ссылка на проект: [https://github.com/yourusername/cv-mui-ne](https://github.com/yourusername/cv-mui-ne)
+Ссылка на проект: [https://github.com/aipunkfacility/cv_ganjavagen](https://github.com/aipunkfacility/cv_ganjavagen)
+
+## 🌐 Деплой
+
+Сайт автоматически деплоится на GitHub Pages при пуше в ветку `master`.
+Актуальная версия: [https://aipunkfacility.github.io/cv_ganjavagen/](https://aipunkfacility.github.io/cv_ganjavagen/)
