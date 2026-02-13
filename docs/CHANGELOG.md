@@ -2,6 +2,15 @@
 
 <!-- markdownlint-disable MD024 -->
 
+## [0.7.0] — 2026-02-13
+
+### Добавлено
+
+- **Deployment:** Настроен автоматический деплой на GitHub Pages через GitHub Actions.
+- **Config:** Настроены `site` и `base` в `astro.config.mjs` для корректной работы на стандартном домене GitHub.
+
+---
+
 ## [0.6.0] — 2026-02-13
 
 ### Добавлено
