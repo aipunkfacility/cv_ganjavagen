@@ -80,5 +80,20 @@ const t = useTranslations(lang);
 				cursor: pointer;
 			}
 		</style>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const logoLink = document.querySelector('.logo-link') as HTMLAnchorElement;
+				const main = document.querySelector('main');
+				
+				logoLink?.addEventListener('click', (e) => {
+					const targetUrl = new URL(logoLink.href, window.location.origin);
+					if (targetUrl.pathname === window.location.pathname) {
+						e.preventDefault();
+						if (main) main.scrollTop = 0;
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
