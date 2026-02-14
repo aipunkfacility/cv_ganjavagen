@@ -254,3 +254,61 @@ section:nth-of-type(even) {
     font-size: 1rem;
   }
 }
+
+/* Print Overrides for Swiper */
+@media print {
+
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .swiper,
+  .swiper-wrapper {
+    display: block !important;
+    height: auto !important;
+    transform: none !important;
+    position: static !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .swiper-slide {
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    break-after: page;
+    page-break-after: always;
+    /* Legacy support */
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+  }
+
+  /* Hide UI elements */
+  .header-controls,
+  .swiper-pagination,
+  .swiper-button-next,
+  .swiper-button-prev,
+  .swiper-scrollbar {
+    display: none !important;
+  }
+
+  /* Ensure header doesn't cover content in print if fixed */
+  .main-header {
+    position: static !important;
+    border-bottom: 1px solid #ccc;
+  }
+
+  section {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 2rem 0 !important;
+  }
+}

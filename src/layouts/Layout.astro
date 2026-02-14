@@ -156,6 +156,39 @@ import 'swiper/css/mousewheel';
                         enabled: true,
                     },
                 });
+
+                // Debug/Screenshot Mode: Alt+S to destroy Swiper
+                document.addEventListener('keydown', (e) => {
+                    if (e.altKey && e.code === 'KeyS') {
+                        e.preventDefault();
+                        if (swiper && !swiper.destroyed) {
+                            // 1. Destroy Swiper instance (cleanStyles = true)
+                            swiper.destroy(true, true);
+                            
+                            // 2. Aggressively strip classes to nullify Layout.astro styles
+                            const swiperEl = document.querySelector('.swiper');
+                            const wrapperEl = document.querySelector('.swiper-wrapper');
+                            const slides = document.querySelectorAll('.swiper-slide');
+
+                            if (swiperEl) swiperEl.classList.remove('swiper');
+                            if (wrapperEl) wrapperEl.classList.remove('swiper-wrapper');
+                            slides.forEach(slide => {
+                                slide.classList.remove('swiper-slide');
+                                // Reset any manual height styles if they exist
+                                (slide as HTMLElement).style.height = ''; 
+                                (slide as HTMLElement).style.overflow = '';
+                            });
+
+                            // 3. Force overrides on Body/HTML
+                            document.documentElement.style.height = 'auto';
+                            document.documentElement.style.overflow = 'auto';
+                            document.body.style.height = 'auto';
+                            document.body.style.overflow = 'auto';
+
+                            console.log('Swiper destroyed. Full page view enabled.');
+                        }
+                    }
+                });
 			});
 		</script>
 	</body>
