@@ -93,6 +93,58 @@ const t = useTranslations(lang);
 						if (main) main.scrollTop = 0;
 					}
 				});
+
+				// Wheel Navigation for notched mice
+				let isScrolling = false;
+				const SNAP_TARGETS_SELECTOR = 'main > section, footer.main-footer';
+
+				main?.addEventListener('wheel', (e) => {
+					// Detection heuristic: e.deltaMode === 1 for Firefox Windows (lines), 
+					// and >= 50 pixels for other browsers to catch discrete wheels.
+					const isDiscrete = e.deltaMode === 1 || Math.abs(e.deltaY) >= 50;
+
+					if (!isDiscrete) return;
+
+					if (isScrolling) {
+						e.preventDefault();
+						return;
+					}
+
+					e.preventDefault();
+					isScrolling = true;
+
+					const direction = e.deltaY > 0 ? 1 : -1;
+					const scrollPadding = 64; // 4rem matching scroll-padding-top
+					const targets = Array.from(document.querySelectorAll(SNAP_TARGETS_SELECTOR)) as HTMLElement[];
+					
+					// Detect if we are effectively at the bottom (for footer logic)
+					const isAtBottom = Math.abs(main.scrollHeight - main.clientHeight - main.scrollTop) < 10;
+
+					// Find the closest index by distance to (scrollTop + padding)
+					let closestIndex = targets.reduce((closestIdx, t, idx) => {
+						const dist = Math.abs(t.offsetTop - (main.scrollTop + scrollPadding));
+						const minDist = Math.abs(targets[closestIdx].offsetTop - (main.scrollTop + scrollPadding));
+						return dist < minDist ? idx : closestIdx;
+					}, 0);
+
+					// Boundary override: if browser clamped scroll at the bottom, we are on the footer
+					if (isAtBottom) closestIndex = targets.length - 1;
+
+					// Determine target index within array bounds
+					const targetIndex = Math.max(0, Math.min(targets.length - 1, closestIndex + direction));
+
+					if (targetIndex !== closestIndex) {
+						targets[targetIndex].scrollIntoView({
+							behavior: 'smooth',
+							// Use 'end' for footer to match CSS scroll-snap-align: end
+							block: targetIndex === targets.length - 1 ? 'end' : 'start'
+						});
+					}
+
+					setTimeout(() => {
+						isScrolling = false;
+					}, 800);
+				}, { passive: false });
 			});
 		</script>
 	</body>
