@@ -47,9 +47,6 @@ const t = useTranslations(lang);
 		</script>
 	</head>
 	<body>
-	<body>
-		<div id="top" style="position: absolute; top: 0;"></div>
-		
 		<header class="main-header">
 			<div class="container header-inner">
 				<a href={lang === 'ru' ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${lang}/`} class="logo-link" aria-label={lang === 'ru' ? 'На главную' : 'Home'}>
@@ -66,92 +63,16 @@ const t = useTranslations(lang);
 
 		<main>
 			<slot />
+			
+			<footer class="main-footer">
+				<div class="container">
+					<div class="footer-bottom">
+						{t('footer.copy')}
+					</div>
+				</div>
+			</footer>
 		</main>
 
-		<footer class="main-footer">
-			<div class="container">
-				<div class="footer-bottom">
-					{t('footer.copy')}
-				</div>
-			</div>
-		</footer>
-
-		<script>
-			const sections = Array.from(document.querySelectorAll('section, footer')) as HTMLElement[];
-
-			let isAnimating = false;
-			let currentSectionIndex = 0;
-
-			function customSmoothScroll(target: number, duration: number, onComplete?: () => void) {
-				if (isAnimating) return;
-				isAnimating = true;
-				
-				// Disable snap during custom animation to prevent fighting
-				document.documentElement.style.scrollSnapType = 'none';
-
-				const start = window.scrollY || document.documentElement.scrollTop;
-				const change = target - start;
-				const startTime = performance.now();
-
-				function animateScroll(currentTime: number) {
-					const elapsed = currentTime - startTime;
-					const progress = Math.min(elapsed / duration, 1);
-					
-					// Easing: easeInOutQuad
-					const ease = progress < 0.5 
-						? 2 * progress * progress 
-						: 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-					window.scrollTo(0, start + change * ease);
-
-					if (progress < 1) {
-						requestAnimationFrame(animateScroll);
-					} else {
-						isAnimating = false;
-						// Re-enable snap after animation
-						document.documentElement.style.scrollSnapType = 'y mandatory';
-						if (onComplete) onComplete();
-					}
-				}
-
-				requestAnimationFrame(animateScroll);
-			}
-
-			// Update sticky header or active state if needed
-			function handleScroll() {
-				if (isAnimating) return;
-				
-				const scrollTop = window.scrollY || document.documentElement.scrollTop;
-				let closestIndex = 0;
-				let minDiff = Math.abs(scrollTop - sections[0].offsetTop);
-
-				sections.forEach((section, index) => {
-					const diff = Math.abs(scrollTop - section.offsetTop);
-					if (diff < minDiff) {
-						minDiff = diff;
-						closestIndex = index;
-					}
-				});
-				currentSectionIndex = closestIndex;
-			}
-
-			window.addEventListener('scroll', handleScroll, { passive: true });
-
-			// Wheel listener removed to allow native scrolling
-
-			// Touch listeners removed to allow native scrolling
-
-			// Logo click to top
-			const logoLink = document.querySelector('.logo-link');
-			if (logoLink) {
-				logoLink.addEventListener('click', (e) => {
-					e.preventDefault();
-					isAnimating = false;
-					currentSectionIndex = 0;
-					customSmoothScroll(0, 1000);
-				});
-			}
-		</script>
 		<style is:global>
 			.logo-link {
 				text-decoration: none;
