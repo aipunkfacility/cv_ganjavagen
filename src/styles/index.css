@@ -87,12 +87,34 @@ main {
   /* overflow: hidden; -> Let Swiper handle overflow */
 }
 
-/* Fix for Full Page Screenshot extensions - Keep this if it's for external tools, 
-   but Swiper might interfere. Leaving it as 'no-snap' override is safer. */
-:root.no-snap html {
+/* Screenshot Mode Bypass - For external tools like GoFullPage */
+:root.is-screenshot-mode,
+:root.is-screenshot-mode body {
   height: auto !important;
   overflow: visible !important;
 }
+
+:root.is-screenshot-mode main,
+:root.is-screenshot-mode .swiper,
+:root.is-screenshot-mode .swiper-wrapper {
+  height: auto !important;
+  transform: none !important;
+  overflow: visible !important;
+  display: block !important;
+}
+
+:root.is-screenshot-mode section {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  padding: 6rem 0 !important;
+  position: static !important;
+}
+
+:root.is-screenshot-mode .main-header {
+  position: absolute !important;
+}
+
 
 h1,
 h2,

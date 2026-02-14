@@ -157,38 +157,66 @@ import 'swiper/css/mousewheel';
                     },
                 });
 
-                // Debug/Screenshot Mode: Alt+S to destroy Swiper
+                const triggerScreenshotMode = () => {
+                    if (swiper && !swiper.destroyed) {
+                        // 1. Mark for screenshot mode (triggers CSS normalization)
+                        document.documentElement.classList.add('is-screenshot-mode');
+
+                        // 2. Destroy Swiper instance (cleanStyles = true)
+                        swiper.destroy(true, true);
+                        
+                        // 3. Aggressive manual cleanup of Swiper artifacts
+                        const swiperEl = document.querySelector('.swiper');
+                        const wrapperEl = document.querySelector('.swiper-wrapper');
+                        const slides = document.querySelectorAll('.swiper-slide');
+
+                        if (swiperEl) {
+                            swiperEl.classList.remove('swiper');
+                            (swiperEl as HTMLElement).style.height = ''; 
+                        }
+                        if (wrapperEl) {
+                            wrapperEl.classList.remove('swiper-wrapper');
+                            (wrapperEl as HTMLElement).style.transform = '';
+                            (wrapperEl as HTMLElement).style.transition = '';
+                            (wrapperEl as HTMLElement).style.height = '';
+                        }
+                        
+                        slides.forEach(slide => {
+                            const s = slide as HTMLElement;
+                            s.classList.remove('swiper-slide');
+                            s.style.height = ''; 
+                            s.style.overflow = '';
+                            s.style.transform = '';
+                            s.style.transition = '';
+                        });
+
+                        console.log('SYSTEM: Screenshot Mode Activated. Layout normalized for capture.');
+                    }
+                };
+
+                // Manual trigger: Alt+S
                 document.addEventListener('keydown', (e) => {
                     if (e.altKey && e.code === 'KeyS') {
                         e.preventDefault();
-                        if (swiper && !swiper.destroyed) {
-                            // 1. Destroy Swiper instance (cleanStyles = true)
-                            swiper.destroy(true, true);
-                            
-                            // 2. Aggressively strip classes to nullify Layout.astro styles
-                            const swiperEl = document.querySelector('.swiper');
-                            const wrapperEl = document.querySelector('.swiper-wrapper');
-                            const slides = document.querySelectorAll('.swiper-slide');
-
-                            if (swiperEl) swiperEl.classList.remove('swiper');
-                            if (wrapperEl) wrapperEl.classList.remove('swiper-wrapper');
-                            slides.forEach(slide => {
-                                slide.classList.remove('swiper-slide');
-                                // Reset any manual height styles if they exist
-                                (slide as HTMLElement).style.height = ''; 
-                                (slide as HTMLElement).style.overflow = '';
-                            });
-
-                            // 3. Force overrides on Body/HTML
-                            document.documentElement.style.height = 'auto';
-                            document.documentElement.style.overflow = 'auto';
-                            document.body.style.height = 'auto';
-                            document.body.style.overflow = 'auto';
-
-                            console.log('Swiper destroyed. Full page view enabled.');
-                        }
+                        triggerScreenshotMode();
                     }
                 });
+
+                // Auto-detection Heuristic 1: External scroll attempts
+                window.addEventListener('scroll', () => {
+                    if (swiper && !swiper.destroyed && window.scrollY > 1) {
+                        triggerScreenshotMode();
+                    }
+                }, { passive: true });
+
+                // Auto-detection Heuristic 2: Massive height mutation (common for capture tools)
+                const observer = new MutationObserver(() => {
+                    if (swiper && !swiper.destroyed && document.documentElement.scrollHeight > window.innerHeight * 2) {
+                        triggerScreenshotMode();
+                    }
+                });
+                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
 			});
 		</script>
 	</body>
