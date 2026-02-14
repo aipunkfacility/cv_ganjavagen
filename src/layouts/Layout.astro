@@ -13,6 +13,10 @@ const { title, description = "ИИ-автоматизация и креатив 
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+// Swiper Styles
+import 'swiper/css';
+import 'swiper/css/mousewheel';
 ---
 
 <!doctype html>
@@ -61,16 +65,18 @@ const t = useTranslations(lang);
 			</div>
 		</header>
 
-		<main>
-			<slot />
-			
-			<footer class="main-footer">
-				<div class="container">
-					<div class="footer-bottom">
-						{t('footer.copy')}
+		<main class="swiper">
+			<div class="swiper-wrapper">
+				<slot />
+				
+				<footer class="main-footer">
+					<div class="container">
+						<div class="footer-bottom">
+							{t('footer.copy')}
+						</div>
 					</div>
-				</div>
-			</footer>
+				</footer>
+			</div>
 		</main>
 
 		<style is:global>
@@ -79,9 +85,36 @@ const t = useTranslations(lang);
 				color: inherit;
 				cursor: pointer;
 			}
+
+			/* Ensure Swiper takes full height */
+			:root, body {
+				height: 100%;
+				margin: 0;
+				overflow: hidden; /* Prevent native scroll */
+			}
+			.swiper {
+				width: 100%;
+				height: 100vh;
+			}
+			.swiper-slide {
+				height: 100vh; /* Force slides to full viewport */
+				overflow: hidden;
+			}
+            /* Allow footer to be auto height if needed, but for vertical swiper mostly fixed height is better. 
+               Let's try auto height for footer if it's the last slide. */
+            .main-footer.swiper-slide {
+                height: auto;
+                min-height: 100vh; /* Make it full screen to match others for consistency, or let it be auto */
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end; /* Bottom align footer content */
+            }
 		</style>
 
 		<script>
+            import Swiper from 'swiper';
+            import { Mousewheel } from 'swiper/modules';
+
 			document.addEventListener('DOMContentLoaded', () => {
 				const logoLink = document.querySelector('.logo-link') as HTMLAnchorElement;
 				const main = document.querySelector('main');
@@ -90,61 +123,39 @@ const t = useTranslations(lang);
 					const targetUrl = new URL(logoLink.href, window.location.origin);
 					if (targetUrl.pathname === window.location.pathname) {
 						e.preventDefault();
-						if (main) main.scrollTop = 0;
+                        // Reset Swiper to first slide
+                        const swiperEl = document.querySelector('.swiper') as any;
+                        if (swiperEl && swiperEl.swiper) {
+                             swiperEl.swiper.slideTo(0);
+                        }
 					}
 				});
 
-				// Wheel Navigation for notched mice
-				let isScrolling = false;
-				const SNAP_TARGETS_SELECTOR = 'main > section, footer.main-footer';
+                // Initialize Swiper
+                const wrapper = document.querySelector('.swiper-wrapper');
+                if (wrapper) {
+                    // Add swiper-slide class to all direct children (sections and footer)
+                    Array.from(wrapper.children).forEach(child => {
+                        child.classList.add('swiper-slide');
+                    });
+                }
 
-				main?.addEventListener('wheel', (e) => {
-					// Detection heuristic: e.deltaMode === 1 for Firefox Windows (lines), 
-					// and >= 50 pixels for other browsers to catch discrete wheels.
-					const isDiscrete = e.deltaMode === 1 || Math.abs(e.deltaY) >= 50;
-
-					if (!isDiscrete) return;
-
-					if (isScrolling) {
-						e.preventDefault();
-						return;
-					}
-
-					e.preventDefault();
-					isScrolling = true;
-
-					const direction = e.deltaY > 0 ? 1 : -1;
-					const scrollPadding = 64; // 4rem matching scroll-padding-top
-					const targets = Array.from(document.querySelectorAll(SNAP_TARGETS_SELECTOR)) as HTMLElement[];
-					
-					// Detect if we are effectively at the bottom (for footer logic)
-					const isAtBottom = Math.abs(main.scrollHeight - main.clientHeight - main.scrollTop) < 10;
-
-					// Find the closest index by distance to (scrollTop + padding)
-					let closestIndex = targets.reduce((closestIdx, t, idx) => {
-						const dist = Math.abs(t.offsetTop - (main.scrollTop + scrollPadding));
-						const minDist = Math.abs(targets[closestIdx].offsetTop - (main.scrollTop + scrollPadding));
-						return dist < minDist ? idx : closestIdx;
-					}, 0);
-
-					// Boundary override: if browser clamped scroll at the bottom, we are on the footer
-					if (isAtBottom) closestIndex = targets.length - 1;
-
-					// Determine target index within array bounds
-					const targetIndex = Math.max(0, Math.min(targets.length - 1, closestIndex + direction));
-
-					if (targetIndex !== closestIndex) {
-						targets[targetIndex].scrollIntoView({
-							behavior: 'smooth',
-							// Use 'end' for footer to match CSS scroll-snap-align: end
-							block: targetIndex === targets.length - 1 ? 'end' : 'start'
-						});
-					}
-
-					setTimeout(() => {
-						isScrolling = false;
-					}, 800);
-				}, { passive: false });
+                const swiper = new Swiper('.swiper', {
+                    modules: [Mousewheel],
+                    direction: 'vertical',
+                    speed: 800,
+                    simulateTouch: false, // Disable mouse drag on desktop
+                    mousewheel: {
+                        forceToAxis: true,
+                        sensitivity: 1,
+                        thresholdDelta: 50, // Optimize for notched mice vs trackpads
+                    },
+                    slidesPerView: 1,
+                    spaceBetween: 0,
+                    keyboard: {
+                        enabled: true,
+                    },
+                });
 			});
 		</script>
 	</body>

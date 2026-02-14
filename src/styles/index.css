@@ -80,24 +80,19 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Main Scroll Container */
 main {
   height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 4rem;
-  /* position: relative; */
+  width: 100%;
+  /* overflow: hidden; -> Let Swiper handle overflow */
 }
 
-/* Fix for Full Page Screenshot extensions */
+/* Fix for Full Page Screenshot extensions - Keep this if it's for external tools, 
+   but Swiper might interfere. Leaving it as 'no-snap' override is safer. */
 :root.no-snap html {
-  scroll-snap-type: none !important;
   height: auto !important;
   overflow: visible !important;
 }
-
-/* CSS Cleanup */
-
-/* .snap-container removed */
 
 h1,
 h2,
@@ -117,18 +112,18 @@ h4 {
 }
 
 section {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  /* fallback for browsers not supporting dvh */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding: 8rem 0;
   box-sizing: border-box;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  /* Fluid scrolling */
   position: relative;
   background-color: var(--color-bg);
+  /* Ensure strict sizing for slides */
+  overflow: hidden;
 }
 
 section:nth-of-type(even) {
@@ -198,11 +193,14 @@ section:nth-of-type(even) {
 .main-footer {
   border-top: 1px solid var(--color-border);
   padding: var(--spacing-medium) 0;
-  scroll-snap-align: end;
-  /* Snap footer too */
+  /* Swiper slide behavior handled by JS/Wrapper */
   background: var(--color-surface);
+  /* Ensure it has height if it's a slide, or let content dictate it. 
+     For vertical swiper, slides usually need fixed height or 'auto' with centered slides. 
+     We will check Layout logic. For now, remove snap align. */
+  height: auto;
   min-height: 50vh;
-  /* Give it some height to snap comfortably */
+  /* Make footer substantial enough to be a slide if needed, or let existing content drive it */
 }
 
 .footer-grid {
