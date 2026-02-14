@@ -47,50 +47,49 @@ const t = useTranslations(lang);
 		</script>
 	</head>
 	<body>
-		<div class="snap-container">
-			<div id="top" style="position: absolute; top: 0;"></div>
-			
-			<header class="main-header">
-				<div class="container header-inner">
-					<a href={lang === 'ru' ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${lang}/`} class="logo-link" aria-label={lang === 'ru' ? 'На главную' : 'Home'}>
-						<div class="logo">
-							{lang === 'ru' ? 'Александр Финаев' : 'Alexander Finaev'}
-						</div>
-					</a>
-					<div class="header-controls">
-						<ThemeSwitcher />
-						<LanguagePicker />
+	<body>
+		<div id="top" style="position: absolute; top: 0;"></div>
+		
+		<header class="main-header">
+			<div class="container header-inner">
+				<a href={lang === 'ru' ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${lang}/`} class="logo-link" aria-label={lang === 'ru' ? 'На главную' : 'Home'}>
+					<div class="logo">
+						{lang === 'ru' ? 'Александр Финаев' : 'Alexander Finaev'}
 					</div>
+				</a>
+				<div class="header-controls">
+					<ThemeSwitcher />
+					<LanguagePicker />
 				</div>
-			</header>
+			</div>
+		</header>
 
-			<main>
-				<slot />
-			</main>
+		<main>
+			<slot />
+		</main>
 
-			<footer class="main-footer">
-				<div class="container">
-					<div class="footer-bottom">
-						{t('footer.copy')}
-					</div>
+		<footer class="main-footer">
+			<div class="container">
+				<div class="footer-bottom">
+					{t('footer.copy')}
 				</div>
-			</footer>
-		</div>
-
+			</div>
+		</footer>
 
 		<script>
-			const container = document.querySelector('.snap-container') as HTMLElement;
 			const sections = Array.from(document.querySelectorAll('section, footer')) as HTMLElement[];
 
 			let isAnimating = false;
 			let currentSectionIndex = 0;
 
-			function customSmoothScroll(element: HTMLElement, target: number, duration: number, onComplete?: () => void) {
+			function customSmoothScroll(target: number, duration: number, onComplete?: () => void) {
 				if (isAnimating) return;
 				isAnimating = true;
-				element.style.scrollSnapType = 'none';
+				
+				// Disable snap during custom animation to prevent fighting
+				document.documentElement.style.scrollSnapType = 'none';
 
-				const start = element.scrollTop;
+				const start = window.scrollY || document.documentElement.scrollTop;
 				const change = target - start;
 				const startTime = performance.now();
 
@@ -103,13 +102,14 @@ const t = useTranslations(lang);
 						? 2 * progress * progress 
 						: 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
-					element.scrollTop = start + change * ease;
+					window.scrollTo(0, start + change * ease);
 
 					if (progress < 1) {
 						requestAnimationFrame(animateScroll);
 					} else {
 						isAnimating = false;
-						element.style.scrollSnapType = 'y mandatory';
+						// Re-enable snap after animation
+						document.documentElement.style.scrollSnapType = 'y mandatory';
 						if (onComplete) onComplete();
 					}
 				}
@@ -117,12 +117,11 @@ const t = useTranslations(lang);
 				requestAnimationFrame(animateScroll);
 			}
 
-			// Показ/скрытие кнопки и обновление индекса
+			// Update sticky header or active state if needed
 			function handleScroll() {
-
 				if (isAnimating) return;
 				
-				const scrollTop = container.scrollTop;
+				const scrollTop = window.scrollY || document.documentElement.scrollTop;
 				let closestIndex = 0;
 				let minDiff = Math.abs(scrollTop - sections[0].offsetTop);
 
@@ -136,65 +135,21 @@ const t = useTranslations(lang);
 				currentSectionIndex = closestIndex;
 			}
 
-			container.addEventListener('scroll', handleScroll);
+			window.addEventListener('scroll', handleScroll, { passive: true });
 
-			// Перехват колеса мыши
-			container.addEventListener('wheel', (e) => {
-				if (isAnimating) {
+			// Wheel listener removed to allow native scrolling
+
+			// Touch listeners removed to allow native scrolling
+
+			// Logo click to top
+			const logoLink = document.querySelector('.logo-link');
+			if (logoLink) {
+				logoLink.addEventListener('click', (e) => {
 					e.preventDefault();
-					return;
-				}
-
-				// Если скролл-снап отключен (например, для скриншота), не перехватываем
-				if (getComputedStyle(container).scrollSnapType === 'none') {
-					return;
-				}
-
-				if (Math.abs(e.deltaY) < 30) return; // Игнорируем мелкие движения
-
-				e.preventDefault();
-				const direction = e.deltaY > 0 ? 1 : -1;
-				const nextIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
-
-				if (nextIndex !== currentSectionIndex) {
-					currentSectionIndex = nextIndex;
-					customSmoothScroll(container, sections[currentSectionIndex].offsetTop, 1000);
-				}
-			}, { passive: false });
-
-			// Поддержка Touch (для мобильных)
-			let touchStartY = 0;
-			container.addEventListener('touchstart', (e) => {
-				touchStartY = e.touches[0].clientY;
-			}, { passive: true });
-
-			container.addEventListener('touchend', (e) => {
-				if (isAnimating) return;
-				const touchEndY = e.changedTouches[0].clientY;
-				const diff = touchStartY - touchEndY;
-
-				if (Math.abs(diff) > 50) { // Порог чувствительности
-					const direction = diff > 0 ? 1 : -1;
-					const nextIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex + direction));
-					
-					if (nextIndex !== currentSectionIndex) {
-						currentSectionIndex = nextIndex;
-						customSmoothScroll(container, sections[currentSectionIndex].offsetTop, 1000);
-					}
-				}
-			}, { passive: true });
-
-			if (container) {
-				// Лого-ссылка
-				const logoLink = document.querySelector('.logo-link');
-				if (logoLink) {
-					logoLink.addEventListener('click', (e) => {
-						e.preventDefault();
-						isAnimating = false;
-						currentSectionIndex = 0;
-						customSmoothScroll(container, 0, 1000);
-					});
-				}
+					isAnimating = false;
+					currentSectionIndex = 0;
+					customSmoothScroll(0, 1000);
+				});
 			}
 		</script>
 		<style is:global>

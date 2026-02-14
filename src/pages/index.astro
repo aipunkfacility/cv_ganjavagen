@@ -6,7 +6,6 @@ import Method from '../components/Method.astro';
 import Competencies from '../components/Competencies.astro';
 import LocalSolutions from '../components/LocalSolutions.astro';
 import CTASection from '../components/CTASection.astro';
-import Concept from '../components/Concept.astro';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -33,6 +32,5 @@ const t = useTranslations(lang);
 	<Method />
 	<Competencies />
 	<LocalSolutions />
-	<Concept />
 	<CTASection />
 </Layout>

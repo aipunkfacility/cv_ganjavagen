@@ -40,6 +40,10 @@
   /* Muted background for CTA in dark mode */
 }
 
+:root.dark section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 :root {
   --color-cta-bg: var(--color-accent);
   /* Default (light theme) accent for CTA */
@@ -57,27 +61,21 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; <--- REMOVED to prevent conflict with scroll-snap (causes jerkiness) */
+  scroll-snap-type: y mandatory;
+  /* Allow default overflow handling or explicitly set it */
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  /* Remove height: 100% to allow body to grow and html to scroll naturally */
 }
 
-@media print {
-
-  html,
-  body {
-    height: auto !important;
-    overflow: visible !important;
-  }
-}
-
-:root.no-snap,
-:root.no-snap body {
+/* Fix for Full Page Screenshot extensions */
+:root.no-snap html {
+  scroll-snap-type: none !important;
   height: auto !important;
   overflow: visible !important;
 }
@@ -88,49 +86,12 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* Move overflow-x handling to html if needed, or keep here if it doesn't break snap. 
+     Safest for snap is to let html handle scroll. */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.snap-container {
-  height: var(--section-height-dynamic);
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Fix for Full Page Screenshot extensions */
-:root.no-snap .snap-container {
-  height: auto !important;
-  overflow-y: visible !important;
-  scroll-snap-type: none !important;
-  display: block !important;
-}
-
-:root.no-snap section {
-  min-height: 0 !important;
-  height: auto !important;
-  scroll-snap-align: none !important;
-  padding: var(--spacing-large) 0 !important;
-  display: block !important;
-}
-
-@media print {
-  .snap-container {
-    height: auto !important;
-    overflow-y: visible !important;
-    scroll-snap-type: none !important;
-    display: block !important;
-  }
-
-  section {
-    min-height: 0 !important;
-    height: auto !important;
-    scroll-snap-align: none !important;
-    padding: var(--spacing-large) 0 !important;
-    display: block !important;
-  }
-}
+/* .snap-container removed */
 
 h1,
 h2,
@@ -153,11 +114,23 @@ section {
   min-height: var(--section-height-dynamic);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: var(--spacing-medium) 0;
+  justify-content: flex-start;
+  padding: 8rem 0;
+  /* Increased global padding */
+  box-sizing: border-box;
   box-sizing: border-box;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* Enforces stopping at each section */
   position: relative;
+  z-index: 1;
+  /* Verify stacking context */
+  background-color: var(--color-bg);
+  /* Default bg */
+}
+
+section:nth-of-type(even) {
+  background-color: var(--color-bg-alt);
 }
 
 /* Принцип "Негативного пространства" */
