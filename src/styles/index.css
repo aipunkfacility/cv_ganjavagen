@@ -95,13 +95,7 @@ main {
   overflow: visible !important;
 }
 
-line-height: 1.6;
--webkit-font-smoothing: antialiased;
-/* Move overflow-x handling to html if needed, or keep here if it doesn't break snap. 
-     Safest for snap is to let html handle scroll. */
-transition: background-color 0.3s ease,
-color 0.3s ease;
-}
+/* CSS Cleanup */
 
 /* .snap-container removed */
 
