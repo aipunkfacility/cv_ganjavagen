@@ -58,20 +58,21 @@
   --bg-surface: #121212;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
+  --text-secondary: #e2e8f0;
+  --text-muted: #cbd5e1;
 
   /* Map existing tokens to new system */
   --color-bg: var(--bg-page);
   --color-bg-alt: var(--bg-page);
   --color-text: var(--text-secondary);
   --color-heading: var(--text-primary);
-  --color-text-muted: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
   --color-border: var(--border-subtle);
 
-  --color-accent: hsl(var(--h-accent), 45%, var(--l-accent));
-  --color-accent-soft: hsla(var(--h-accent), 45%, var(--l-accent), 0.15);
-  --color-accent-glow: hsla(var(--h-accent), 45%, var(--l-accent), 0.5);
-  --color-detail: hsl(25, 45%, 65%);
+  --color-accent: hsl(var(--h-accent), var(--s-accent), 40%);
+  --color-accent-soft: hsla(var(--h-accent), var(--s-accent), 40%, 0.15);
+  --color-accent-glow: hsla(var(--h-accent), var(--s-accent), 40%, 0.5);
+  --color-detail: hsl(25, var(--s-accent), 40%);
 
   --color-surface: var(--bg-surface);
 
