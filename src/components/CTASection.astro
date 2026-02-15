@@ -13,7 +13,7 @@ const t = useTranslations(lang);
 					<i class="ri-telegram-fill"></i>
 				</a>
 				<a href="https://zalo.me/84946943543" class="contact-btn zalo" aria-label="Zalo" target="_blank" rel="noopener noreferrer">
-					<i class="ri-zalo-fill"></i>
+					<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" class="zalo-img-icon" />
 				</a>
 			</div>
 		</div>
@@ -80,24 +80,24 @@ const t = useTranslations(lang);
         opacity: 1;
     }
 
-	.contact-btn i, .contact-btn svg {
+	.contact-btn i {
+		width: 60px;
+		height: 60px;
+		font-size: 60px;
 		flex-shrink: 0;
         z-index: 1;
-	}
-
-	.contact-btn i {
-		font-size: 4.5rem;
-		line-height: 1;
-        width: 4.5rem;
-        height: 4.5rem;
+        line-height: 1;
         display: flex;
         align-items: center;
         justify-content: center;
 	}
 
-    .contact-btn svg {
-        width: 4.5rem;
-        height: 4.5rem;
+    .zalo-img-icon {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+        z-index: 1;
+        object-fit: contain;
     }
 
 	.contact-btn.telegram {
@@ -105,7 +105,7 @@ const t = useTranslations(lang);
 	}
 
 	.contact-btn.zalo {
-		background: linear-gradient(135deg, #0068ff, #3fa9ff);
+		background: linear-gradient(135deg, #0088FF, #3fa9ff);
 	}
 
 	.contact-btn:hover {
@@ -128,9 +128,10 @@ const t = useTranslations(lang);
 			border-radius: 16px;
 		}
 
-		.contact-btn i {
-			width: 3.8rem;
-			height: 3.8rem;
+		.contact-btn i, .zalo-img-icon {
+			width: 50px;
+			height: 50px;
+            font-size: 50px;
 		}
 	}
 </style>
