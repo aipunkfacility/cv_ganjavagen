@@ -11,10 +11,9 @@
   --l-accent: 15%;
   /* Deep Teal */
 
-  --color-bg: hsl(60, 15%, 96%);
-  /* Off-white / Sand */
-  /* Off-white / Sand */
-  --color-bg-alt: hsl(60, 10%, 93%);
+  --color-bg: #f0efeb;
+  /* Off-white / Warm Gray */
+  --color-bg-alt: #e8e6e1;
   --color-text: hsl(0, 0%, 25%);
   /* Muted gray for body */
   --color-heading: hsl(0, 0%, 5%);
@@ -41,7 +40,12 @@
 
   /* Typography */
   --font-serif: 'Playfair Display', serif;
+  --font-heading: 'Oswald', sans-serif;
   --font-sans: 'Inter', sans-serif;
+
+  /* Hero Accent Colors */
+  --color-hero-accent: #c08b63;
+  /* Золотисто-коричневый с референса */
 
   /* Spacing & Layout */
   --spacing-large: clamp(4rem, 8vh, 8rem);
@@ -52,35 +56,7 @@
   --section-height: 100vh;
 }
 
-:root.dark {
-  /* Premium Dark Theme Variables */
-  --bg-page: #0a0a0a;
-  --bg-surface: #121212;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --text-primary: #f8fafc;
-  --text-secondary: #e2e8f0;
-  --text-muted: #cbd5e1;
 
-  /* Map existing tokens to new system */
-  --color-bg: var(--bg-page);
-  --color-bg-alt: var(--bg-page);
-  --color-text: var(--text-secondary);
-  --color-heading: var(--text-primary);
-  --color-text-muted: var(--text-muted);
-  --color-border: var(--border-subtle);
-
-  --color-accent: hsl(var(--h-accent), var(--s-accent), 40%);
-  --color-accent-soft: hsla(var(--h-accent), var(--s-accent), 40%, 0.15);
-  --color-accent-glow: hsla(var(--h-accent), var(--s-accent), 40%, 0.5);
-  --color-detail: hsl(25, var(--s-accent), 40%);
-
-  --color-surface: var(--bg-surface);
-
-  /* Glassmorphism Tokens - Unified Dark */
-  --glass-bg: hsla(0, 0%, 7%, 0.8);
-  --glass-border: var(--border-subtle);
-  --glass-shadow: 0 8px 32px 0 hsla(0, 0%, 0%, 0.5);
-}
 
 @media (max-width: 768px) {
   :root {
@@ -296,12 +272,11 @@ section {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.25rem 0;
+  padding: 0.3rem 0;
   background-color: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-bottom: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
   transition: all 0.4s ease;
 }
 
@@ -309,15 +284,17 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: none;
+  padding: 0 5rem;
 }
 
 .logo {
-  font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-family: var(--font-heading);
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-text);
+  color: var(--color-heading);
   /* Optimized Transitions */
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-block;

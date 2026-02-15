@@ -2,7 +2,6 @@
 import '../styles/index.css';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import LanguagePicker from '../components/LanguagePicker.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 
 interface Props {
 	title: string;
@@ -31,23 +30,10 @@ const t = useTranslations(lang);
 		<!-- Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 		<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 
-		<script is:inline>
-			const theme = (() => {
-				if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-					return localStorage.getItem('theme');
-				}
-				return 'light';
-			})();
 
-			if (theme === 'dark') {
-				document.documentElement.classList.add('dark');
-			} else {
-				document.documentElement.classList.remove('dark');
-			}
-		</script>
 	</head>
 	<body>
 		<header class="main-header">
@@ -58,7 +44,6 @@ const t = useTranslations(lang);
 					</div>
 				</a>
 				<div class="header-controls">
-					<ThemeSwitcher />
 					<LanguagePicker />
 				</div>
 			</div>
