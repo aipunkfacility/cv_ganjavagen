@@ -142,5 +142,5 @@ npx astro check
 
 ## 🌐 Деплой
 
-Сайт автоматически деплоится на GitHub Pages при пуше в ветку `master`.
+Сайт автоматически деплоится на GitHub Pages при пуше в ветку `master`. 
 Актуальная версия: [https://aipunkfacility.github.io/cv_ganjavagen/](https://aipunkfacility.github.io/cv_ganjavagen/)
