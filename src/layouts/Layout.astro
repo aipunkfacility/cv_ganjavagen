@@ -117,7 +117,6 @@ import 'swiper/css/mousewheel';
 
 			document.addEventListener('DOMContentLoaded', () => {
 				const logoLink = document.querySelector('.logo-link') as HTMLAnchorElement;
-				const main = document.querySelector('main');
 				
 				logoLink?.addEventListener('click', (e) => {
 					const targetUrl = new URL(logoLink.href, window.location.origin);
@@ -143,18 +142,22 @@ import 'swiper/css/mousewheel';
                 const swiper = new Swiper('.swiper', {
                     modules: [Mousewheel],
                     direction: 'vertical',
-                    speed: 800,
-                    simulateTouch: false, // Disable mouse drag on desktop
+                    speed: 1200, // Slightly slower for more premium feel
+                    followFinger: false,
+                    threshold: 5,
+                    simulateTouch: false,
                     mousewheel: {
                         forceToAxis: true,
-                        sensitivity: 1,
-                        thresholdDelta: 50, // Optimize for notched mice vs trackpads
+                        sensitivity: 0.8,
+                        thresholdDelta: 60,
                     },
                     slidesPerView: 1,
                     spaceBetween: 0,
                     keyboard: {
                         enabled: true,
                     },
+                    // Parallax or Fade could be cool, but vertical slides need speed and smoothness
+                    resistanceRatio: 0,
                 });
 
                 const triggerScreenshotMode = () => {

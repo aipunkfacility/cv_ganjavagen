@@ -5,14 +5,15 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 <section id="contact" class="cta-section">
-	<div class="container">
+	<div class="container reveal">
 		<div class="cta-card">
-			<h2>{t('contact.title')}</h2>
+			<h2 class="hero-title">{t('contact.title')}</h2>
 			<div class="contact-buttons">
 				<a href="https://t.me/afinaev" class="contact-btn telegram" aria-label="Telegram" target="_blank" rel="noopener noreferrer">
 					<i class="ri-telegram-fill"></i>
 				</a>
 				<a href="https://zalo.me/84946943543" class="contact-btn zalo" aria-label="Zalo" target="_blank" rel="noopener noreferrer">
+					<!-- SVG content stays same but wrapper gets styles -->
 					<svg
 					   version="1.1"
 					   id="Layer_1"
@@ -55,11 +56,10 @@ const t = useTranslations(lang);
 
 <style>
 	.cta-section {
-		background-color: var(--color-cta-bg);
+		background-color: var(--color-accent);
 		color: #fff;
 		min-height: auto;
 		padding: var(--spacing-large) 0;
-		scroll-snap-align: end;
 	}
 
 	.cta-card {
@@ -69,15 +69,17 @@ const t = useTranslations(lang);
 	}
 
 	.cta-card h2 {
-		font-size: 2.5rem;
-		margin-bottom: 3rem;
+		font-size: clamp(2rem, 5vw, 4rem);
+		margin-bottom: 4rem;
 		text-transform: uppercase;
 		letter-spacing: -0.02em;
+        color: #fff;
+        line-height: 1;
 	}
 
 	.contact-buttons {
 		display: flex;
-		gap: 2rem;
+		gap: 3rem;
 		justify-content: center;
 		flex-wrap: wrap;
 	}
@@ -86,62 +88,76 @@ const t = useTranslations(lang);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 80px;
-		height: 80px;
-		border-radius: 16px;
+		width: 90px;
+		height: 90px;
+		border-radius: 20px;
 		text-decoration: none;
 		color: #fff;
-		transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+		transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
 	}
 
-	.contact-btn i, .zalo-icon {
-		width: 4.2rem;
-		height: 4.2rem;
+    .contact-btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .contact-btn:hover::after {
+        opacity: 1;
+    }
+
+	.contact-btn i, .contact-btn svg {
+		width: 4.5rem;
+		height: 4.5rem;
 		flex-shrink: 0;
+        z-index: 1;
 	}
 
 	.contact-btn i {
-		font-size: 4.2rem;
+		font-size: 4.5rem;
 		line-height: 1;
 	}
 
 	.contact-btn.telegram {
-		background: #0088cc;
+		background: linear-gradient(135deg, #0088cc, #00aaff);
 	}
 
 	.contact-btn.zalo {
-		background: #0068ff;
+		background: linear-gradient(135deg, #0068ff, #3fa9ff);
 	}
 
 	.contact-btn:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+		transform: translateY(-8px) scale(1.05);
+		box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 	}
 
 	@media (max-width: 768px) {
 		.cta-section {
-			padding: var(--spacing-large) 1rem;
-		}
-
-		.cta-card h2 {
-			font-size: 1.8rem;
-			margin-bottom: 2.5rem;
+			padding: var(--spacing-large) 1.5rem;
 		}
 
 		.contact-buttons {
-			gap: 1.5rem;
+			gap: 2rem;
 		}
 
 		.contact-btn {
-			width: 70px;
-			height: 70px;
-			border-radius: 14px;
+			width: 80px;
+			height: 80px;
+			border-radius: 16px;
 		}
 
-		.contact-btn i, .zalo-icon {
-			width: 3.6rem;
-			height: 3.6rem;
+		.contact-btn i, .contact-btn svg {
+			width: 3.8rem;
+			height: 3.8rem;
 		}
 	}
 </style>

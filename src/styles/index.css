@@ -5,65 +5,78 @@
 */
 
 :root {
-  --color-bg: #F9F9F9;
-  --color-bg-alt: #F0F0EE;
-  --color-text: #1A1A1A;
-  --color-accent: #0D3B3A;
+  /* Premium HSL Color Palette - Light Mode */
+  --h-accent: 178;
+  --s-accent: 64%;
+  --l-accent: 15%;
   /* Deep Teal */
-  --color-detail: #96694C;
-  /* Clay */
-  --color-surface: #FFFFFF;
-  --color-border: rgba(26, 26, 26, 0.1);
 
+  --color-bg: hsl(60, 15%, 96%);
+  /* Off-white / Sand */
+  --color-bg-alt: hsl(60, 10%, 93%);
+  --color-text: hsl(0, 0%, 10%);
+  --color-text-muted: hsla(0, 0%, 10%, 0.7);
+
+  --color-accent: hsl(var(--h-accent), var(--s-accent), var(--l-accent));
+  --color-accent-soft: hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.1);
+  --color-detail: hsl(25, 40%, 45%);
+  /* Clay */
+
+  --color-surface: hsla(0, 0%, 100%, 0.7);
+  --color-border: hsla(0, 0%, 0%, 0.08);
+
+  /* Glassmorphism Tokens */
+  --glass-bg: hsla(0, 0%, 100%, 0.6);
+  --glass-border: hsla(0, 0%, 100%, 0.4);
+  --glass-blur: 15px;
+  --glass-shadow: 0 8px 32px 0 hsla(0, 0%, 0%, 0.05);
+
+  /* Typography */
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Inter', sans-serif;
 
-  --spacing-large: 8rem;
-  --spacing-medium: 4rem;
-  --spacing-small: 2rem;
+  /* Spacing & Layout */
+  --spacing-large: clamp(4rem, 8vh, 8rem);
+  --spacing-medium: clamp(2rem, 4vh, 4rem);
+  --spacing-small: clamp(1rem, 2vh, 2rem);
 
   --container-padding: 2rem;
   --section-height: 100vh;
-  --section-height-dynamic: 100dvh;
 }
 
 :root.dark {
-  --color-bg: #121212;
-  --color-bg-alt: #1E1E1E;
-  --color-text: #E0E0E0;
-  --color-accent: #38A89D;
-  /* More muted teal for dark mode */
-  --color-detail: #D4A373;
-  --color-surface: #1E1E1E;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-cta-bg: #1E1E1E;
-  /* Muted background for CTA in dark mode */
-}
+  /* Premium HSL Color Palette - Dark Mode */
+  --l-accent: 44%;
+  /* Muted Teal */
 
-:root.dark section {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
+  --color-bg: hsl(220, 15%, 8%);
+  --color-bg-alt: hsl(220, 15%, 12%);
+  --color-text: hsl(220, 10%, 90%);
+  --color-text-muted: hsla(220, 10%, 90%, 0.6);
 
-:root {
-  --color-cta-bg: var(--color-accent);
-  /* Default (light theme) accent for CTA */
+  --color-accent: hsl(var(--h-accent), 45%, var(--l-accent));
+  --color-accent-soft: hsla(var(--h-accent), 45%, var(--l-accent), 0.15);
+  --color-detail: hsl(25, 45%, 65%);
+
+  --color-surface: hsla(220, 15%, 15%, 0.7);
+  --color-border: hsla(220, 10%, 90%, 0.08);
+
+  /* Glassmorphism Tokens - Dark */
+  --glass-bg: hsla(220, 15%, 12%, 0.6);
+  --glass-border: hsla(220, 15%, 25%, 0.4);
+  --glass-shadow: 0 8px 32px 0 hsla(0, 0%, 0%, 0.3);
 }
 
 @media (max-width: 768px) {
   :root {
-    --spacing-large: 2.5rem;
-    /* Reduced from 4rem */
-    --spacing-medium: 1.5rem;
-    /* Reduced from 2rem */
-    --spacing-small: 0.8rem;
-    --container-padding: 1rem;
+    --container-padding: 1.5rem;
   }
 }
 
 html {
-  /* Reset html scroll */
   overflow: hidden;
   height: 100%;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -76,45 +89,37 @@ body {
   -webkit-font-smoothing: antialiased;
   height: 100vh;
   overflow: hidden;
-  /* Kill window scroll */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Main Scroll Container */
-main {
-  height: 100vh;
-  width: 100%;
-  /* overflow: hidden; -> Let Swiper handle overflow */
+/* Animations */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Screenshot Mode Bypass - For external tools like GoFullPage */
-:root.is-screenshot-mode,
-:root.is-screenshot-mode body {
-  height: auto !important;
-  overflow: visible !important;
+@keyframes reveal-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-:root.is-screenshot-mode main,
-:root.is-screenshot-mode .swiper,
-:root.is-screenshot-mode .swiper-wrapper {
-  height: auto !important;
-  transform: none !important;
-  overflow: visible !important;
-  display: block !important;
+.reveal {
+  animation: reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-
-:root.is-screenshot-mode section {
-  height: auto !important;
-  min-height: 0 !important;
-  overflow: visible !important;
-  padding: 6rem 0 !important;
-  position: static !important;
-}
-
-:root.is-screenshot-mode .main-header {
-  position: absolute !important;
-}
-
 
 h1,
 h2,
@@ -122,11 +127,12 @@ h3,
 h4 {
   font-family: var(--font-serif);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.1;
+  color: var(--color-accent);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--container-padding);
   width: 100%;
@@ -135,16 +141,14 @@ h4 {
 
 section {
   height: 100vh;
-  /* fallback for browsers not supporting dvh */
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: 8rem 0;
+  justify-content: center;
+  padding: var(--spacing-large) 0;
   box-sizing: border-box;
   position: relative;
   background-color: var(--color-bg);
-  /* Ensure strict sizing for slides */
   overflow: hidden;
 }
 
@@ -152,42 +156,41 @@ section:nth-of-type(even) {
   background-color: var(--color-bg-alt);
 }
 
-/* Принцип "Негативного пространства" */
-.whitespace-extreme {
-  margin: var(--spacing-large) 0;
-}
-
 .cta-button {
-  display: inline-block;
-  background-color: var(--color-text);
-  color: var(--color-bg);
-  padding: 1.2rem 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-accent), hsl(var(--h-accent), var(--s-accent), calc(var(--l-accent) + 10%)));
+  color: #fff;
+  padding: 1rem 2.5rem;
   text-decoration: none;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 0.9rem;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 15px hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.2);
 }
 
 .cta-button:hover {
-  background-color: var(--color-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(13, 59, 58, 0.15);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 25px hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.3);
 }
 
-
-/* Header */
+/* Glass Header */
 .main-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1rem 0;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  padding: 1.25rem 0;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s ease;
 }
 
 .header-inner {
@@ -198,9 +201,9 @@ section:nth-of-type(even) {
 
 .logo {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-text);
 }
@@ -211,69 +214,38 @@ section:nth-of-type(even) {
   gap: 1.5rem;
 }
 
-/* Footer */
+/* Refined Footer */
 .main-footer {
   border-top: 1px solid var(--color-border);
   padding: var(--spacing-medium) 0;
-  /* Swiper slide behavior handled by JS/Wrapper */
-  background: var(--color-surface);
-  /* Ensure it has height if it's a slide, or let content dictate it. 
-     For vertical swiper, slides usually need fixed height or 'auto' with centered slides. 
-     We will check Layout logic. For now, remove snap align. */
+  background: var(--color-bg-alt);
   height: auto;
-  min-height: 50vh;
-  /* Make footer substantial enough to be a slide if needed, or let existing content drive it */
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-}
-
-.footer-section h3 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.footer-section p {
-  font-size: 0.9rem;
-  opacity: 0.7;
-  line-height: 1.7;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .footer-bottom {
   margin-top: var(--spacing-medium);
   text-align: center;
-  font-size: 0.75rem;
-  opacity: 0.4;
-  letter-spacing: 0.02em;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
 }
 
 @media (max-width: 768px) {
   section {
-    justify-content: flex-start;
-    padding-top: 4rem;
-    /* Reduced from 6rem */
+    padding: 6rem 0 4rem;
   }
 
   .main-header {
-    padding: 0.8rem 0;
+    padding: 1rem 0;
   }
 
   .logo {
-    font-size: 1rem;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .footer-section h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 }
 
