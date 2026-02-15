@@ -13,17 +13,25 @@
 
   --color-bg: hsl(60, 15%, 96%);
   /* Off-white / Sand */
+  /* Off-white / Sand */
   --color-bg-alt: hsl(60, 10%, 93%);
-  --color-text: hsl(0, 0%, 10%);
-  --color-text-muted: hsla(0, 0%, 10%, 0.7);
+  --color-text: hsl(0, 0%, 25%);
+  /* Muted gray for body */
+  --color-heading: hsl(0, 0%, 5%);
+  /* Deep black for headings */
+  --color-text-muted: hsla(0, 0%, 10%, 0.6);
 
   --color-accent: hsl(var(--h-accent), var(--s-accent), var(--l-accent));
   --color-accent-soft: hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.1);
+  --color-accent-glow: hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.5);
+  /* Light Mode Glow */
   --color-detail: hsl(25, 40%, 45%);
   /* Clay */
 
   --color-surface: hsla(0, 0%, 100%, 0.7);
-  --color-border: hsla(0, 0%, 0%, 0.08);
+  /* Refined Separator */
+  --color-border: hsla(0, 0%, 0%, 0.12);
+  /* Slightly darker for better visibility */
 
   /* Glassmorphism Tokens */
   --glass-bg: hsla(0, 0%, 100%, 0.6);
@@ -49,13 +57,22 @@
   --l-accent: 44%;
   /* Muted Teal */
 
-  --color-bg: hsl(220, 15%, 8%);
+  /* Atmospheric Dark Mode Background */
+  --color-bg: #0a0c10;
+  /* Solid Color */
+
   --color-bg-alt: hsl(220, 15%, 12%);
-  --color-text: hsl(220, 10%, 90%);
-  --color-text-muted: hsla(220, 10%, 90%, 0.6);
+  --color-text: hsl(220, 10%, 80%);
+  /* Muted gray-blue for body */
+  --color-heading: hsl(0, 0%, 98%);
+  /* Pure white for headings */
+  --color-text-muted: hsla(220, 10%, 85%, 0.7);
+  /* Improved readability */
 
   --color-accent: hsl(var(--h-accent), 45%, var(--l-accent));
   --color-accent-soft: hsla(var(--h-accent), 45%, var(--l-accent), 0.15);
+  --color-accent-glow: hsla(var(--h-accent), 45%, var(--l-accent), 0.5);
+  /* Dark Mode Glow */
   --color-detail: hsl(25, 45%, 65%);
 
   --color-surface: hsla(220, 15%, 15%, 0.7);
@@ -87,41 +104,86 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
-  line-height: 1.6;
+  line-height: 1.8;
+  /* Increased line-height for editorial feel */
+  font-weight: 300;
+  /* Lighter weight for elegance */
   -webkit-font-smoothing: antialiased;
   height: auto;
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Visual Cleanup: Removed transition and Atumpunk noise */
 }
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Atumpunk Noise Texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+}
+
+/* Visual Cleanup: Removed Radial Gradient */
 
 /* Animations */
 @keyframes reveal-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px) scale(0.98);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes reveal-scale {
-  from {
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
-    transform: scale(0.95);
+    /* Initially hidden */
+    transform: translateZ(0);
+    /* Hardware Acceleration */
+    will-change: transform, opacity;
   }
 
-  to {
-    opacity: 1;
-    transform: scale(1);
+  /* Staggered Entry Delays */
+  .delay-100 {
+    animation-delay: 100ms;
   }
-}
 
-.reveal {
-  animation: reveal-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .delay-500 {
+    animation-delay: 500ms;
+  }
 }
 
 h1,
@@ -129,9 +191,29 @@ h2,
 h3,
 h4 {
   font-family: var(--font-serif);
-  font-weight: 700;
+  font-weight: 400;
+  /* Regular weight for Playfair Display looks more premium */
   line-height: 1.1;
-  color: var(--color-accent);
+  color: var(--color-heading);
+  margin-bottom: var(--spacing-small);
+  text-wrap: balance;
+  /* Balanced Headlines */
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 5rem);
+  letter-spacing: -0.03em;
+  /* Clean Text - No Glow */
+}
+
+h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
 }
 
 .container {
@@ -143,26 +225,60 @@ h4 {
 }
 
 section {
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: var(--spacing-large) 0;
+  /* Maximize White Space */
+  padding: clamp(6rem, 10vh, 10rem) var(--container-padding);
   box-sizing: border-box;
   position: relative;
-  background-color: var(--color-bg);
-  overflow: hidden;
+
+  /* Optimized Section - No heavy filters */
+  background-color: transparent;
+  border-bottom: 1px solid var(--glass-border);
+
+  /* Transitions removed for stability */
+  will-change: transform;
 }
 
+
+
+/* Base Glass Class for Cards/Modules */
+.glass-panel {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px;
+  padding: var(--spacing-medium);
+  /* Consistent Padding */
+  /* Optimized Transitions */
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.glass-panel:hover {
+  border-color: hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.4);
+  box-shadow: 0 15px 45px hsla(0, 0%, 0%, 0.15);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Removed alternating backgrounds to allow glass effect over body */
 section:nth-of-type(even) {
-  background-color: var(--color-bg-alt);
+  background-color: var(--glass-bg);
+  /* Ensure consistency */
 }
 
 .cta-button {
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(135deg, var(--color-accent), hsl(var(--h-accent), var(--s-accent), calc(var(--l-accent) + 10%)));
+  background-color: var(--color-accent);
   color: #fff;
   padding: 1rem 2.5rem;
   text-decoration: none;
@@ -171,13 +287,14 @@ section:nth-of-type(even) {
   letter-spacing: 0.1em;
   font-size: 0.85rem;
   border-radius: 4px;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 4px 15px hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.2);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .cta-button:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 25px hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.3);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 /* Glass Header */
@@ -209,6 +326,15 @@ section:nth-of-type(even) {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-text);
+  /* Optimized Transitions */
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.logo-link:hover .logo {
+  transform: scale(1.05);
 }
 
 .header-controls {
@@ -219,7 +345,8 @@ section:nth-of-type(even) {
 
 /* Refined Footer */
 .main-footer {
-  border-top: 1px solid var(--color-border);
+  border-top: 0.5px solid var(--color-border);
+  /* Subtle divider */
   padding: var(--spacing-medium) 0;
   background: var(--color-bg-alt);
   height: auto;
