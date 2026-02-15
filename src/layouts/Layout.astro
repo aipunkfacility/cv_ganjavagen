@@ -15,8 +15,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 // Swiper Styles
-import 'swiper/css';
-import 'swiper/css/mousewheel';
+
 ---
 
 <!doctype html>
@@ -65,18 +64,16 @@ import 'swiper/css/mousewheel';
 			</div>
 		</header>
 
-		<main class="swiper">
-			<div class="swiper-wrapper">
-				<slot />
-				
-				<footer class="main-footer">
-					<div class="container">
-						<div class="footer-bottom">
-							{t('footer.copy')}
-						</div>
+		<main class="main-content">
+			<slot />
+			
+			<footer class="main-footer">
+				<div class="container">
+					<div class="footer-bottom">
+						{t('footer.copy')}
 					</div>
-				</footer>
-			</div>
+				</div>
+			</footer>
 		</main>
 
 		<style is:global>
@@ -86,35 +83,18 @@ import 'swiper/css/mousewheel';
 				cursor: pointer;
 			}
 
-			/* Ensure Swiper takes full height */
+			/* Ensure full height */
 			:root, body {
-				height: 100%;
+				height: auto;
 				margin: 0;
-				overflow: hidden; /* Prevent native scroll */
 			}
-			.swiper {
+			.main-content {
 				width: 100%;
-				height: 100vh;
+				min-height: 100vh;
 			}
-			.swiper-slide {
-				height: 100vh; /* Force slides to full viewport */
-				overflow: hidden;
-			}
-            /* Allow footer to be auto height if needed, but for vertical swiper mostly fixed height is better. 
-               Let's try auto height for footer if it's the last slide. */
-            .main-footer.swiper-slide {
-                height: auto;
-                min-height: 100vh; /* Make it full screen to match others for consistency, or let it be auto */
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end; /* Bottom align footer content */
-            }
 		</style>
 
 		<script>
-            import Swiper from 'swiper';
-            import { Mousewheel } from 'swiper/modules';
-
 			document.addEventListener('DOMContentLoaded', () => {
 				const logoLink = document.querySelector('.logo-link') as HTMLAnchorElement;
 				
@@ -122,104 +102,9 @@ import 'swiper/css/mousewheel';
 					const targetUrl = new URL(logoLink.href, window.location.origin);
 					if (targetUrl.pathname === window.location.pathname) {
 						e.preventDefault();
-                        // Reset Swiper to first slide
-                        const swiperEl = document.querySelector('.swiper') as any;
-                        if (swiperEl && swiperEl.swiper) {
-                             swiperEl.swiper.slideTo(0);
-                        }
+						window.scrollTo({ top: 0, behavior: 'smooth' });
 					}
 				});
-
-                // Initialize Swiper
-                const wrapper = document.querySelector('.swiper-wrapper');
-                if (wrapper) {
-                    // Add swiper-slide class to all direct children (sections and footer)
-                    Array.from(wrapper.children).forEach(child => {
-                        child.classList.add('swiper-slide');
-                    });
-                }
-
-                const swiper = new Swiper('.swiper', {
-                    modules: [Mousewheel],
-                    direction: 'vertical',
-                    speed: 1200, // Slightly slower for more premium feel
-                    followFinger: false,
-                    threshold: 5,
-                    simulateTouch: false,
-                    mousewheel: {
-                        forceToAxis: true,
-                        sensitivity: 0.8,
-                        thresholdDelta: 60,
-                    },
-                    slidesPerView: 1,
-                    spaceBetween: 0,
-                    keyboard: {
-                        enabled: true,
-                    },
-                    // Parallax or Fade could be cool, but vertical slides need speed and smoothness
-                    resistanceRatio: 0,
-                });
-
-                const triggerScreenshotMode = () => {
-                    if (swiper && !swiper.destroyed) {
-                        // 1. Mark for screenshot mode (triggers CSS normalization)
-                        document.documentElement.classList.add('is-screenshot-mode');
-
-                        // 2. Destroy Swiper instance (cleanStyles = true)
-                        swiper.destroy(true, true);
-                        
-                        // 3. Aggressive manual cleanup of Swiper artifacts
-                        const swiperEl = document.querySelector('.swiper');
-                        const wrapperEl = document.querySelector('.swiper-wrapper');
-                        const slides = document.querySelectorAll('.swiper-slide');
-
-                        if (swiperEl) {
-                            swiperEl.classList.remove('swiper');
-                            (swiperEl as HTMLElement).style.height = ''; 
-                        }
-                        if (wrapperEl) {
-                            wrapperEl.classList.remove('swiper-wrapper');
-                            (wrapperEl as HTMLElement).style.transform = '';
-                            (wrapperEl as HTMLElement).style.transition = '';
-                            (wrapperEl as HTMLElement).style.height = '';
-                        }
-                        
-                        slides.forEach(slide => {
-                            const s = slide as HTMLElement;
-                            s.classList.remove('swiper-slide');
-                            s.style.height = ''; 
-                            s.style.overflow = '';
-                            s.style.transform = '';
-                            s.style.transition = '';
-                        });
-
-                        console.log('SYSTEM: Screenshot Mode Activated. Layout normalized for capture.');
-                    }
-                };
-
-                // Manual trigger: Alt+S
-                document.addEventListener('keydown', (e) => {
-                    if (e.altKey && e.code === 'KeyS') {
-                        e.preventDefault();
-                        triggerScreenshotMode();
-                    }
-                });
-
-                // Auto-detection Heuristic 1: External scroll attempts
-                window.addEventListener('scroll', () => {
-                    if (swiper && !swiper.destroyed && window.scrollY > 1) {
-                        triggerScreenshotMode();
-                    }
-                }, { passive: true });
-
-                // Auto-detection Heuristic 2: Massive height mutation (common for capture tools)
-                const observer = new MutationObserver(() => {
-                    if (swiper && !swiper.destroyed && document.documentElement.scrollHeight > window.innerHeight * 2) {
-                        triggerScreenshotMode();
-                    }
-                });
-                observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
-
 			});
 		</script>
 	</body>

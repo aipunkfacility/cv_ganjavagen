@@ -74,9 +74,11 @@
 }
 
 html {
-  overflow: hidden;
-  height: 100%;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -87,8 +89,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  height: 100vh;
-  overflow: hidden;
+  height: auto;
+  min-height: 100vh;
+  overflow-x: hidden;
   transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -246,63 +249,5 @@ section:nth-of-type(even) {
 
   .logo {
     font-size: 0.9rem;
-  }
-}
-
-/* Print Overrides for Swiper */
-@media print {
-
-  html,
-  body {
-    height: auto !important;
-    overflow: visible !important;
-    background: white !important;
-    color: black !important;
-  }
-
-  .swiper,
-  .swiper-wrapper {
-    display: block !important;
-    height: auto !important;
-    transform: none !important;
-    position: static !important;
-    width: 100% !important;
-    overflow: visible !important;
-  }
-
-  .swiper-slide {
-    height: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    break-after: page;
-    page-break-after: always;
-    /* Legacy support */
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-  }
-
-  /* Hide UI elements */
-  .header-controls,
-  .swiper-pagination,
-  .swiper-button-next,
-  .swiper-button-prev,
-  .swiper-scrollbar {
-    display: none !important;
-  }
-
-  /* Ensure header doesn't cover content in print if fixed */
-  .main-header {
-    position: static !important;
-    border-bottom: 1px solid #ccc;
-  }
-
-  section {
-    height: auto !important;
-    min-height: 0 !important;
-    padding: 2rem 0 !important;
   }
 }
