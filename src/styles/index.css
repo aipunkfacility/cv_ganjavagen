@@ -57,8 +57,8 @@
   --bg-page: #0a0a0a;
   --bg-surface: #121212;
   --border-subtle: rgba(255, 255, 255, 0.08);
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
 
   /* Map existing tokens to new system */
   --color-bg: var(--bg-page);
@@ -188,7 +188,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-serif);
-  font-weight: 400;
+  font-weight: 700;
   /* Regular weight for Playfair Display looks more premium */
   line-height: 1.1;
   color: var(--color-heading);
