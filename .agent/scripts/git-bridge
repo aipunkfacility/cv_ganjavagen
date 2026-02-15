@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# .agent/scripts/git-bridge
+# Bridge script to execute Git hooks from Windows (via wsl.exe) or native Linux
+
+# 1. Detect Environment
+if grep -q Microsoft /proc/version 2>/dev/null || [ -n "$WSL_DISTRO_NAME" ]; then
+    # Running inside WSL - execute directly
+    IS_WSL=true
+elif [ -n "$COMSPEC" ]; then
+    # Running on Windows (Git Bash/CMD/PowerShell)
+    IS_WSL=false
+else
+    # Fallback to assume Linux/WSL if not Windows
+    IS_WSL=true
+fi
+
+# 2. Define the command to run (entire)
+CMD="entire"
+
+# 3. Execute
+if [ "$IS_WSL" = true ]; then
+    # Native execution
+    exec "$CMD" "$@"
+else
+    # Windows execution -> Bridge to WSL
+    
+    # Check if wsl.exe is available
+    if ! command -v wsl.exe >/dev/null 2>&1; then
+        echo "Error: wsl.exe not found. This hook requires WSL." >&2
+        exit 1
+    fi
+
+    # Convert arguments (file paths) from Windows to WSL format
+    # We iterate through args, and if it looks like a path, we convert it.
+    
+    ARGS=()
+    for arg in "$@"; do
+        if [[ "$arg" == [a-zA-Z]:\\* ]] || [[ "$arg" == \.* ]] || [[ "$arg" == /* ]]; then
+             # It's likely a path. Attempt conversion.
+             # We use wslpath -u to convert Windows path to WSL path
+             # existing paths will be converted, non-existing might fail or return input depending on wslpath version.
+             # Ideally we only convert if it looks like a file.
+             
+             # Simple check: does it exist?
+             if [ -e "$arg" ]; then
+                 WSL_PATH=$(wsl.exe wslpath -u "$arg" | tr -d '\r')
+                 ARGS+=("$WSL_PATH")
+             else
+                 # Pass through as is strings
+                 ARGS+=("$arg")
+             fi
+        else
+            ARGS+=("$arg")
+        fi
+    done
+
+    # Construct the command string for WSL
+    # bash -lic ensures we load the user's interactive profile (.bashrc/.zshrc) where 'entire' path might be set
+    
+    # Join args with spaces (careful with quotes, but for git hooks usually simple paths)
+    # A robust way is passing args to the bash script, but wsl -e is better if available.
+    # However, 'entire' might be an alias or function or in ~/bin which requires shell loading.
+    # Let's try bash -lic.
+    
+    # We need to escape arguments for the bash -c string
+    CMD_STRING="$CMD"
+    for arg in "${ARGS[@]}"; do
+        CMD_STRING="$CMD_STRING \"$arg\""
+    done
+
+    wsl.exe bash -lic "$CMD_STRING"
+fi
